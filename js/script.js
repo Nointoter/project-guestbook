@@ -40,4 +40,12 @@ document.addEventListener("DOMContentLoaded", function() {
             event.preventDefault();
         }
     });
+
+    // CAPTCHA refresh functionality
+    const refreshCaptchaButton = document.getElementById("refreshCaptcha");
+    const captchaImage = document.getElementById("captchaImage");
+
+    refreshCaptchaButton.addEventListener("click", function() {
+        captchaImage.src = "captcha/captcha.php?" + Date.now();
+    });
 });

@@ -8,9 +8,24 @@ if (isset($_GET['delete'])) {
     $stmt->execute();
     $stmt->close();
     header("Location: index.php");
+    exit();
 }
 
-$result = $conn->query("SELECT * FROM messages ORDER BY created_at DESC");
+// Pagination settings
+$limit = 5; // Number of messages per page
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start = ($page - 1) * $limit;
+
+// Get total number of messages
+$result = $conn->query("SELECT COUNT(*) AS total FROM messages");
+$total_messages = $result->fetch_assoc()['total'];
+$total_pages = ceil($total_messages / $limit);
+
+// Fetch messages for the current page
+$stmt = $conn->prepare("SELECT * FROM messages ORDER BY created_at DESC LIMIT ?, ?");
+$stmt->bind_param("ii", $start, $limit);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -48,5 +63,10 @@ $result = $conn->query("SELECT * FROM messages ORDER BY created_at DESC");
         ?>
         </tbody>
     </table>
+    <div class="pagination">
+        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+            <a href="?page=<?= $i ?>" class="<?= $page == $i ? 'active' : '' ?>"><?= $i ?></a>
+        <?php endfor; ?>
+    </div>
 </body>
 </html>
