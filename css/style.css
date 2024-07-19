@@ -47,6 +47,22 @@ form input[type="submit"]:hover {
     background-color: #45a049;
 }
 
+.notification {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    position: relative;
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
 .captcha-container {
     display: flex;
     align-items: center;

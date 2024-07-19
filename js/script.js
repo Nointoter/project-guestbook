@@ -4,6 +4,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const emailInput = document.getElementById("email");
     const captchaInput = document.getElementById("captcha");
     const textInput = document.getElementById("text");
+
+    if (notification) {
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 5000);
+    }
+
     if (form) {
         form.addEventListener("submit", function(event) {
             let valid = true;

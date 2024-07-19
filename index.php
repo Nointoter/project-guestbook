@@ -2,6 +2,12 @@
 include 'config.php';
 session_start();
 
+$message = "";
+
+$username_value = "";
+$email_value = "";
+$text_value = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_name = $conn->real_escape_string($_POST['username']);
     $email = $conn->real_escape_string($_POST['email']);
@@ -10,20 +16,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
 
+    $username_value = $user_name;
+    $email_value = $email;
+    $text_value = $text;
+
     if ($captcha != $_SESSION['captcha_code']) {
-        echo "Incorrect CAPTCHA.";
+        $message = "Incorrect CAPTCHA.";
     } else {
         $sql = "INSERT INTO messages (username, email, text, ip_address, user_agent) VALUES ('$user_name', '$email', '$text', '$ip_address', '$user_agent')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully";
+            $message = "New record created successfully";
+            $username_value = "";
+            $email_value = "";
+            $text_value = "";
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            $message = "Error: " . $sql . "<br>" . $conn->error;
         }
     }
 }
 
-// Пагинация
 $records_per_page = 5;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $records_per_page;
@@ -39,6 +51,7 @@ $total_records = $total_records_result->fetch_assoc()['total'];
 $total_pages = ceil($total_records / $records_per_page);
 ?>
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,12 +61,16 @@ $total_pages = ceil($total_records / $records_per_page);
 </head>
 <body>
     <h1>Guestbook</h1>
+    <?php if (!empty($message)): ?>
+    <div id="notification" class="notification"><?= $message ?></div>
+    <?php endif; ?>
+
     <form action="index.php" method="post">
         <label for="username">User Name:</label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="username" name="username" value="<?= htmlspecialchars($username_value) ?>" required>
         
         <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" value="<?= htmlspecialchars($email_value) ?>" required>
         
         <label for="captcha">CAPTCHA:</label>
         <div class="captcha-container">
@@ -63,7 +80,7 @@ $total_pages = ceil($total_records / $records_per_page);
         <input type="text" id="captcha" name="captcha" required>
         
         <label for="text">Text:</label>
-        <textarea id="text" name="text" required></textarea>
+        <textarea id="text" name="text" required><?= htmlspecialchars($text_value) ?></textarea>
         
         <input type="submit" value="Submit">
     </form>
