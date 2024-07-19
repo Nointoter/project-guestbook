@@ -10,7 +10,7 @@
 
 1. Clone the repository:
     ```
-    git clone __
+    git clone https://github.com/Nointoter/project-guestbook.git
     ```
 
 2. Import the database:
@@ -28,3 +28,5 @@
 
 - Visit the main page to add and view messages.
 - Visit `/admin` to manage messages.
+
+- Test project on http://gmcrollers.ddns.net/

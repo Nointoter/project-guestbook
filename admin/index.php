@@ -12,7 +12,7 @@ if (isset($_GET['delete'])) {
 }
 
 // Pagination settings
-$limit = 5; // Number of messages per page
+$limit = 25; // Number of messages per page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page - 1) * $limit;
 
