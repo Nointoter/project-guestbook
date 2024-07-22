@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const captchaInput = document.getElementById("captcha");
     const textInput = document.getElementById("text");
 
+    const notification = document.getElementById("notification");
+
     if (notification) {
         setTimeout(() => {
             notification.style.display = 'none';
